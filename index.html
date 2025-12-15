@@ -3,21 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Acceso Bloqueado - AdGuard Home</title>
+    <title>Acceso Bloqueado</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #09090b;
-            --card-bg: rgba(20, 20, 25, 0.75);
-            --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --card-bg: rgba(20, 20, 25, 0.85);
             --gemini-gradient: linear-gradient(90deg, #4b90ff, #ff5546);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa;
-            --neon-glow: 0 0 20px rgba(75, 144, 255, 0.3);
-            --terminal-bg: rgba(0, 0, 0, 0.85);
-            --terminal-text: #00ff9d;
+            --text-muted: #94a3b8;
+            --neon-glow: 0 0 20px rgba(75, 144, 255, 0.2);
+            --danger: #ef4444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,140 +28,123 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
             color: var(--text-main);
-            perspective: 1000px;
+            overflow-x: hidden;
         }
 
         /* Canvas Background */
         #particle-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.6;
+            z-index: -1; opacity: 0.5;
         }
 
-        /* Main Container 3D */
-        .container {
-            width: 100%; display: flex; justify-content: center;
-            transform-style: preserve-3d;
-            animation: float 6s ease-in-out infinite;
-        }
+        .container { width: 100%; display: flex; justify-content: center; }
 
-        /* Glass Card */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
-            padding: 3rem 4rem;
+            padding: 3rem;
             width: 100%;
-            max-width: 600px; /* Un poco más ancho para los logs */
+            max-width: 500px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
             position: relative;
             overflow: hidden;
-            transition: transform 0.1s ease;
-            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
         }
 
         @media (max-width: 768px) {
             .card { padding: 2rem 1.5rem; }
-            h1 { font-size: 1.8rem; }
         }
 
-        /* Animated Border Gradient */
         .card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
             background: var(--gemini-gradient);
             box-shadow: var(--neon-glow);
-            animation: shimmer 3s infinite linear;
-            background-size: 200% 100%;
         }
 
         /* Icon Animation */
-        .icon-container {
-            margin-bottom: 1.5rem; transform: translateZ(50px);
-            animation: pulse 3s infinite; display: inline-block;
+        .icon-container { margin-bottom: 1.5rem; display: inline-block; }
+        .shield-icon { 
+            fill: url(#gradient-fill); 
+            filter: drop-shadow(0 0 15px rgba(75, 144, 255, 0.4));
         }
-        .shield-icon { fill: url(#gradient-fill); filter: drop-shadow(0 0 10px rgba(75, 144, 255, 0.5)); }
 
         /* Typography */
         h1 {
-            font-weight: 700; margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, #a5b4fc);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            transform: translateZ(30px); letter-spacing: -0.02em;
+            font-weight: 700; margin-bottom: 0.5rem;
+            color: #fff; font-size: 1.8rem;
+            line-height: 1.2;
+            word-break: break-word; /* Para dominios largos */
+        }
+
+        /* Span para el dominio en el titulo */
+        .domain-highlight {
+            color: #4facfe;
+            display: block; /* Pone el dominio en la siguiente linea */
+            font-size: 1.4rem;
+            margin-top: 5px;
         }
 
         p.main-msg {
-            font-size: 1rem; color: var(--text-muted); margin-bottom: 2rem;
-            line-height: 1.6; transform: translateZ(20px);
+            font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
 
-        /* Random Text Box */
+        /* Caja de Texto Divertido */
         .random-text-box {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(59, 130, 246, 0.1);
             border-radius: 12px; padding: 1rem;
-            font-family: 'Space Mono', monospace; font-size: 0.85rem;
-            color: #60a5fa; border-left: 3px solid #60a5fa;
-            margin-bottom: 2rem; transform: translateZ(25px);
-            min-height: 4em; display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            margin-bottom: 2rem;
+            min-height: 3.5em; 
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* Buttons Container */
-        .btn-group {
-            display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;
-            transform: translateZ(40px);
-        }
-
-        .btn {
-            background: linear-gradient(90deg, #2563eb, #7c3aed);
-            color: white; border: none; padding: 1rem 2rem;
-            border-radius: 50px; font-size: 0.9rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s ease;
-            text-decoration: none; display: inline-block;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
-        }
-        
-        .btn.secondary {
-            background: rgba(255,255,255,0.1);
-            box-shadow: none; border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(124, 58, 237, 0.6); }
-        .btn.secondary:hover { background: rgba(255,255,255,0.2); }
-
-        /* LOG CONSOLE STYLES */
-        .log-console {
-            display: none; /* Oculto por defecto */
-            margin-top: 2rem;
-            background: var(--terminal-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
+        /* --- ESTILOS DE LOS DETALLES (SIEMPRE VISIBLES) --- */
+        .details-box {
+            display: block; /* Visible por defecto */
+            margin-bottom: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 0 1.5rem;
             text-align: left;
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--terminal-text);
-            border: 1px solid #333;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            transform: translateZ(35px);
-            max-height: 200px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            animation: slideDown 0.3s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .log-entry { margin-bottom: 8px; border-bottom: 1px solid rgba(0,255,157,0.1); padding-bottom: 4px; }
-        .log-label { color: #888; margin-right: 10px; }
-        .log-value { color: #fff; word-break: break-all; }
-        .log-warn { color: #ff5546; }
+        .detail-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .detail-row:last-child { border-bottom: none; }
 
-        .footer { margin-top: 2rem; font-size: 0.7rem; color: rgba(255, 255, 255, 0.3); transform: translateZ(10px); }
+        .detail-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+        .detail-value { color: #fff; font-size: 0.9rem; font-weight: 600; text-align: right; }
+        
+        .status-badge {
+            background: rgba(239, 68, 68, 0.15); color: var(--danger);
+            padding: 4px 10px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 700;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
 
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
-        @keyframes pulse { 0% { transform: translateZ(50px) scale(1); opacity: 1; } 50% { transform: translateZ(50px) scale(1.1); opacity: 0.8; } 100% { transform: translateZ(50px) scale(1); opacity: 1; } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px) translateZ(35px); } to { opacity: 1; transform: translateY(0) translateZ(35px); } }
+        /* Boton Principal */
+        .btn {
+            background: #2563eb; color: white; border: none; padding: 0.9rem 2rem;
+            border-radius: 12px; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease;
+            text-decoration: none; display: inline-block; width: 100%;
+        }
+        .btn:hover { background: #1d4ed8; transform: translateY(-2px); }
+
+        .footer { margin-top: 2rem; font-size: 0.75rem; color: rgba(255, 255, 255, 0.2); }
+
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
 
     </style>
 </head>
@@ -172,7 +153,7 @@
     <canvas id="particle-canvas"></canvas>
 
     <div class="container">
-        <div class="card" id="tilt-card">
+        <div class="card">
             <svg width="0" height="0" style="position: absolute;">
                 <linearGradient id="gradient-fill" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop stop-color="#4facfe" offset="0%" />
@@ -186,105 +167,91 @@
                 </svg>
             </div>
 
-            <h1>Acceso Restringido</h1>
+            <h1 id="dynamic-title">Acceso Restringido</h1>
             
             <p class="main-msg">
-                Este sitio web ha sido interceptado y bloqueado por tus políticas de seguridad.
-                <br><strong>AdGuard Home Protection</strong>
+                AdGuard Home ha protegido tu red bloqueando esta conexión.
             </p>
+
+            <div class="details-box">
+                <div id="details-content">
+                    </div>
+            </div>
 
             <div class="random-text-box" id="dynamic-text"></div>
 
-            <div class="btn-group">
-                <a href="javascript:history.back()" class="btn">Regresar</a>
-                <button onclick="toggleLogs()" class="btn secondary">Ver Detalles Técnicos</button>
-            </div>
-
-            <div id="log-console" class="log-console">
-                <div id="log-content">Cargando diagnóstico...</div>
-            </div>
+            <a href="javascript:history.back()" class="btn">Regresar a zona segura</a>
 
             <div class="footer">
-                Protegido Por AdGuard Home.
+                Security by AdGuard Home
             </div>
         </div>
     </div>
 
     <script>
-        // --- TEXTOS ALEATORIOS ---
+        // --- TEXTOS ---
         const messages = [
-            "AdGuard dijo: 'Hoy no, joven'.",
-            "Aquí no hay nada que ver, circula.",
-            "Lo sentimos, este sitio web está castigado.",
-            "Error 404: Tu permiso no fue encontrado.",
-            "Mi mamá (AdGuard) no nos deja entrar aquí.",
-            "¿Intentando ver cosas malas? Te estoy vigilando. 👀",
-            "El dominio ha sido interceptado por seguridad.",
-            "Conexión terminada. Protocolo de defensa activo.",
-            "Packet Drop: Initiated. Reason: Unsafe.",
-            "Este dominio está en la lista negra."
+            "AdGuard dijo: 'Hoy no'.",
+            "Sitio web castigado por mala conducta.",
+            "Error 404: Tu permiso no existe.",
+            "¿Intentando ver cosas malas? Te veo. 👀",
+            "Protegiendo tu inocencia digital.",
+            "Mejor ve a ver un video de gatitos."
         ];
 
         const textElement = document.getElementById('dynamic-text');
         const randomMsg = messages[Math.floor(Math.random() * messages.length)];
         
+        // Efecto maquina de escribir
         let i = 0;
         textElement.innerHTML = "";
         function typeWriter() {
             if (i < randomMsg.length) {
                 textElement.innerHTML += randomMsg.charAt(i);
                 i++;
-                setTimeout(typeWriter, 30);
+                setTimeout(typeWriter, 40);
             }
         }
         setTimeout(typeWriter, 300);
 
-        // --- LÓGICA DE LOGS (NUEVO) ---
-        function toggleLogs() {
-            const consoleDiv = document.getElementById('log-console');
-            const contentDiv = document.getElementById('log-content');
-            
-            if (consoleDiv.style.display === 'block') {
-                consoleDiv.style.display = 'none';
-            } else {
-                consoleDiv.style.display = 'block';
-                generateLogs(contentDiv);
-            }
-        }
-
-        function generateLogs(element) {
+        // --- LÓGICA PRINCIPAL ---
+        function initPage() {
             const domain = window.location.hostname;
-            const path = window.location.pathname;
-            const protocol = window.location.protocol;
-            const time = new Date().toLocaleString();
-            const ua = navigator.userAgent;
+            const protocol = window.location.protocol.replace(':', '').toUpperCase();
+            const now = new Date();
+            const dateStr = now.toLocaleDateString();
+            const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-            // Simulamos un log de sistema
-            element.innerHTML = `
-<div class="log-entry"><span class="log-label">[TIMESTAMP]</span><span class="log-value">${time}</span></div>
-<div class="log-entry"><span class="log-label">[TARGET_DOMAIN]</span><span class="log-value" style="color:#facc15">${domain}</span></div>
-<div class="log-entry"><span class="log-label">[FULL_URL]</span><span class="log-value">${protocol}//${domain}${path}</span></div>
-<div class="log-entry"><span class="log-label">[STATUS]</span><span class="log-warn">BLOCKED (DNS SINKHOLE)</span></div>
-<div class="log-entry"><span class="log-label">[ACTION]</span><span class="log-value">Packet Dropped (0.0.0.0)</span></div>
-<div class="log-entry"><span class="log-label">[CLIENT_AGENT]</span><span class="log-value">${ua}</span></div>
-<div class="log-entry"><span class="log-label">[NOTE]</span><span class="log-value">Domain found in active blocklist filters.</span></div>
+            // 1. Actualizar Título Principal
+            const titleElement = document.getElementById('dynamic-title');
+            titleElement.innerHTML = `No puedes acceder a <span class="domain-highlight">${domain}</span>`;
+
+            // 2. Llenar Detalles
+            const detailsElement = document.getElementById('details-content');
+            detailsElement.innerHTML = `
+                <div class="detail-row">
+                    <span class="detail-label">🛡️ Estado</span>
+                    <span class="status-badge">BLOQUEADO</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">📅 Fecha</span>
+                    <span class="detail-value">${dateStr}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">⏰ Hora</span>
+                    <span class="detail-value">${timeStr}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">🔒 Protocolo</span>
+                    <span class="detail-value">${protocol}</span>
+                </div>
             `;
         }
 
-        // --- EFECTO TILT 3D ---
-        const card = document.getElementById('tilt-card');
-        if (window.matchMedia("(min-width: 769px)").matches) {
-            document.addEventListener('mousemove', (e) => {
-                let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-                let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-                card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            });
-            document.addEventListener('mouseleave', (e) => {
-                card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-            });
-        }
+        // Ejecutar inmediatamente
+        initPage();
 
-        // --- PARTICLES BACKGROUND (Optimizado) ---
+        // --- FONDO DE PARTÍCULAS ---
         const canvas = document.getElementById("particle-canvas");
         const ctx = canvas.getContext("2d");
         
@@ -314,16 +281,16 @@
             }
         }
 
-        function init() {
+        function initParticles() {
             particlesArray = [];
-            let divider = (window.innerWidth < 768) ? 15000 : 9000;
+            let divider = (window.innerWidth < 768) ? 15000 : 10000;
             let numberOfParticles = (canvas.height * canvas.width) / divider;
             for (let i = 0; i < numberOfParticles; i++) {
                 let size = (Math.random() * 2) + 1;
                 let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
                 let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 1) - 0.5;
-                let directionY = (Math.random() * 1) - 0.5;
+                let directionX = (Math.random() * 0.4) - 0.2; 
+                let directionY = (Math.random() * 0.4) - 0.2;
                 particlesArray.push(new Particle(x, y, directionX, directionY, size, '#4b90ff'));
             }
         }
@@ -334,8 +301,8 @@
             for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); }
         }
 
-        window.addEventListener('resize', () => { resizeCanvas(); init(); });
-        init(); animate();
+        window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+        initParticles(); animate();
     </script>
 </body>
 </html>
