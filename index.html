@@ -10,12 +10,13 @@
     <style>
         :root {
             --bg-color: #09090b;
-            --card-bg: rgba(20, 20, 25, 0.85);
+            --card-bg: rgba(20, 20, 25, 0.90); /* Más opaco */
             --gemini-gradient: linear-gradient(90deg, #4b90ff, #ff5546);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
             --neon-glow: 0 0 20px rgba(75, 144, 255, 0.2);
             --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -26,15 +27,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh; /* Altura fija */
             padding: 20px;
             color: var(--text-main);
-            overflow-x: hidden;
+            overflow: hidden; /* <--- SCROLL DESHABILITADO */
+            position: fixed; /* Asegura que no se mueva en móviles */
+            width: 100%;
         }
 
         /* Canvas Background */
         #particle-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; opacity: 0.5;
         }
 
@@ -42,22 +45,22 @@
 
         .card {
             background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
-            padding: 3rem;
+            padding: 2.5rem;
             width: 100%;
             max-width: 500px;
             text-align: center;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
             position: relative;
             overflow: hidden;
             animation: float 6s ease-in-out infinite;
         }
 
         @media (max-width: 768px) {
-            .card { padding: 2rem 1.5rem; }
+            .card { padding: 1.5rem; }
         }
 
         .card::before {
@@ -67,7 +70,7 @@
         }
 
         /* Icon Animation */
-        .icon-container { margin-bottom: 1.5rem; display: inline-block; }
+        .icon-container { margin-bottom: 1rem; display: inline-block; }
         .shield-icon { 
             fill: url(#gradient-fill); 
             filter: drop-shadow(0 0 15px rgba(75, 144, 255, 0.4));
@@ -76,75 +79,89 @@
         /* Typography */
         h1 {
             font-weight: 700; margin-bottom: 0.5rem;
-            color: #fff; font-size: 1.8rem;
+            color: #fff; font-size: 1.6rem;
             line-height: 1.2;
-            word-break: break-word; /* Para dominios largos */
         }
 
-        /* Span para el dominio en el titulo */
         .domain-highlight {
-            color: #4facfe;
-            display: block; /* Pone el dominio en la siguiente linea */
-            font-size: 1.4rem;
-            margin-top: 5px;
+            color: #4facfe; display: block;
+            font-size: 1.3rem; margin-top: 5px;
+            word-break: break-all;
         }
 
         p.main-msg {
-            font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5rem;
-            line-height: 1.6;
+            font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;
+            line-height: 1.5;
         }
 
         /* Caja de Texto Divertido */
         .random-text-box {
             background: rgba(59, 130, 246, 0.1);
-            border-radius: 12px; padding: 1rem;
-            font-size: 0.9rem; color: #60a5fa;
+            border-radius: 12px; padding: 0.8rem;
+            font-size: 0.85rem; color: #60a5fa;
             border: 1px solid rgba(59, 130, 246, 0.2);
-            margin-bottom: 2rem;
-            min-height: 3.5em; 
+            margin-bottom: 1.5rem;
+            min-height: 3.2em; 
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* --- ESTILOS DE LOS DETALLES (SIEMPRE VISIBLES) --- */
+        /* --- DETALLES TÉCNICOS --- */
         .details-box {
-            display: block; /* Visible por defecto */
-            margin-bottom: 2rem;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 16px;
-            padding: 0 1.5rem;
+            padding: 0 1.2rem;
             text-align: left;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1.5rem;
         }
 
         .detail-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0.8rem 0;
+            padding: 0.7rem 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         .detail-row:last-child { border-bottom: none; }
 
-        .detail-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
-        .detail-value { color: #fff; font-size: 0.9rem; font-weight: 600; text-align: right; }
+        .detail-label { color: var(--text-muted); font-size: 0.8rem; font-weight: 500; }
+        .detail-value { color: #fff; font-size: 0.85rem; font-weight: 600; text-align: right; }
         
         .status-badge {
             background: rgba(239, 68, 68, 0.15); color: var(--danger);
-            padding: 4px 10px; border-radius: 20px;
-            font-size: 0.75rem; font-weight: 700;
+            padding: 3px 8px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 700;
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        /* Boton Principal */
+        /* --- NUEVA SECCIÓN DE ANÁLISIS --- */
+        .analysis-section {
+            text-align: left;
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+        .analysis-title {
+            font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-muted); margin-bottom: 5px; font-weight: 700;
+        }
+        .analysis-content {
+            background: rgba(255,255,255,0.03);
+            padding: 10px; border-radius: 8px;
+            border-left: 2px solid var(--warning);
+            line-height: 1.4;
+        }
+
+        /* Boton */
         .btn {
-            background: #2563eb; color: white; border: none; padding: 0.9rem 2rem;
-            border-radius: 12px; font-size: 1rem; font-weight: 600;
+            background: #2563eb; color: white; border: none; padding: 0.8rem 2rem;
+            border-radius: 12px; font-size: 0.95rem; font-weight: 600;
             cursor: pointer; transition: all 0.2s ease;
             text-decoration: none; display: inline-block; width: 100%;
         }
         .btn:hover { background: #1d4ed8; transform: translateY(-2px); }
 
-        .footer { margin-top: 2rem; font-size: 0.75rem; color: rgba(255, 255, 255, 0.2); }
+        .footer { margin-top: 1.5rem; font-size: 0.7rem; color: rgba(255, 255, 255, 0.2); }
 
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-6px); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
 
     </style>
 </head>
@@ -170,7 +187,7 @@
             <h1 id="dynamic-title">Acceso Restringido</h1>
             
             <p class="main-msg">
-                AdGuard Home ha protegido tu red bloqueando esta conexión.
+                AdGuard Home ha interceptado esta conexión.
             </p>
 
             <div class="details-box">
@@ -178,38 +195,64 @@
                     </div>
             </div>
 
+            <div class="analysis-section">
+                <div class="analysis-title">DIAGNÓSTICO DE BLOQUEO</div>
+                <div class="analysis-content">
+                    El dominio ha sido categorizado como <strong>No Seguro</strong> o <strong>No Deseado</strong> por las reglas del filtro DNS.
+                    <br><span style="color:var(--text-muted); font-size:0.75rem; margin-top:4px; display:block;">Posibles causas: Publicidad, Rastreadores, Malware o Sitio para Adultos.</span>
+                </div>
+            </div>
+
             <div class="random-text-box" id="dynamic-text"></div>
 
             <a href="javascript:history.back()" class="btn">Regresar a zona segura</a>
 
             <div class="footer">
-                Security by AdGuard Home
+                Security by AdGuard Home • Local Protection
             </div>
         </div>
     </div>
 
     <script>
-        // --- TEXTOS ---
+        // --- NUEVA LISTA AMPLIADA DE TEXTOS ---
         const messages = [
-            "AdGuard dijo: 'Hoy no'.",
-            "Sitio web castigado por mala conducta.",
-            "Error 404: Tu permiso no existe.",
-            "¿Intentando ver cosas malas? Te veo. 👀",
+            "AdGuard dijo: 'Hoy no, joven'.",
+            "Aquí no hay nada que ver, circula.",
+            "Error 404: Tu permiso no fue encontrado.",
+            "Mi mamá (AdGuard) no nos deja entrar aquí.",
+            "¿Intentando ver cosas malas? Te estoy vigilando. 👀",
             "Protegiendo tu inocencia digital.",
-            "Mejor ve a ver un video de gatitos."
+            "Dominio interceptado por seguridad.",
+            "Mejor ve a ver un video de gatitos.",
+            "Acceso denegado por decreto real.",
+            "¡Alto ahí! Zona de peligro detectada.",
+            "El administrador de red te ha pillado.",
+            "Este sitio está en la lista negra del destino.",
+            "Tu IP ha sido anotada... es broma (¿o no?).",
+            "Vuelva usted mañana.",
+            "Nada de eso en mi red, gracias.",
+            "Bloqueo táctico activado.",
+            "Sitio web enviado a la papelera de reciclaje.",
+            "La fuerza no es intensa en este dominio.",
+            "DNS Sinkhole: El agujero negro de internet.",
+            "¿Seguro que querías entrar ahí?",
+            "403 Forbidden: No tienes el pase VIP.",
+            "Lo sentimos, estamos cerrados por limpieza.",
+            "Detectado contenido de dudosa procedencia.",
+            "Tu firewall dice NO.",
+            "Redirigiendo a... ninguna parte."
         ];
 
         const textElement = document.getElementById('dynamic-text');
         const randomMsg = messages[Math.floor(Math.random() * messages.length)];
         
-        // Efecto maquina de escribir
         let i = 0;
         textElement.innerHTML = "";
         function typeWriter() {
             if (i < randomMsg.length) {
                 textElement.innerHTML += randomMsg.charAt(i);
                 i++;
-                setTimeout(typeWriter, 40);
+                setTimeout(typeWriter, 35);
             }
         }
         setTimeout(typeWriter, 300);
@@ -222,7 +265,7 @@
             const dateStr = now.toLocaleDateString();
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-            // 1. Actualizar Título Principal
+            // 1. Título Dinámico
             const titleElement = document.getElementById('dynamic-title');
             titleElement.innerHTML = `No puedes acceder a <span class="domain-highlight">${domain}</span>`;
 
@@ -248,10 +291,9 @@
             `;
         }
 
-        // Ejecutar inmediatamente
         initPage();
 
-        // --- FONDO DE PARTÍCULAS ---
+        // --- FONDO DE PARTÍCULAS (Mantenido) ---
         const canvas = document.getElementById("particle-canvas");
         const ctx = canvas.getContext("2d");
         
@@ -306,4 +348,3 @@
     </script>
 </body>
 </html>
->
