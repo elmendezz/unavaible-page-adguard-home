@@ -256,4 +256,34 @@ Configura un servicio con **launchd** creando un archivo `.plist` en:
 ```bash
 sudo apachectl stop
 ```
+## 🛠️ 3. Configuración de AdGuard Home
+
+Una vez que el servidor Python esté en ejecución, debes vincularlo con AdGuard Home.
+
+### Pasos
+
+1. Abre el **Panel de Administración de AdGuard Home**.
+2. Ve a **Configuración → Configuración DNS**.
+3. Desplázate hacia abajo hasta **Configuración de bloqueo DNS**.
+4. Busca la opción **Modo de bloqueo**.
+5. Selecciona **IP personalizada**.
+6. Introduce la **dirección IP local** del dispositivo donde se ejecuta `run.py`.
+
+### Ejemplos
+
+- **AdGuard Home y el proxy en el mismo dispositivo**  
+  Usa:
+  ```
+  127.0.0.1
+  ```
+  o la IP de la LAN (por ejemplo `192.168.1.50`).
+
+- **AdGuard Home en un dispositivo diferente**  
+  Usa la IP de la LAN del equipo donde se ejecuta el script Python.
+
+7. Haz clic en **Guardar** para aplicar los cambios.
+
+---
+
+A partir de este momento, cualquier dominio bloqueado mostrará la **página de bloqueo personalizada** servida por el proxy.
 
