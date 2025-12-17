@@ -86,7 +86,7 @@ except KeyboardInterrupt:
   
  Save that file with any name you like, although
  ***run.py*** is the one you should use.
- *** REMEMBER TO RUN IT AS SUDO IF U ARE USING TERMUX ***
+ **REMEMBER TO RUN IT AS SUDO IF YOU ARE USING TERMUX**
   
  # Autostart - Autorun 
  
