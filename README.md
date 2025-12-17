@@ -259,3 +259,34 @@ Use **launchd** by creating a `.plist` file inside:
 ```bash
 sudo apachectl stop
 ```
+## 🛠️ 3. AdGuard Home Configuration
+
+Once the Python server is running, you need to link it with AdGuard Home.
+
+### Steps
+
+1. Open the **AdGuard Home Admin Panel**.
+2. Go to **Settings → DNS Settings**.
+3. Scroll down to **DNS Blocking Settings**.
+4. Locate the **Blocking mode** option.
+5. Select **Custom IP**.
+6. Enter the **local IP address** of the device running `run.py`.
+
+### Examples
+
+- **AdGuard Home and the proxy on the same device**  
+  Use:
+  ```
+  127.0.0.1
+  ```
+  or the LAN IP (for example `192.168.1.50`).
+
+- **AdGuard Home on a different device**  
+  Use the LAN IP of the machine running the Python script.
+
+7. Click **Save** to apply the changes.
+
+---
+
+From now on, every blocked domain will display the **custom block page** served by the proxy.
+
