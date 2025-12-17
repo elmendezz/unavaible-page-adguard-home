@@ -295,7 +295,7 @@ From now on, every blocked domain will display the **custom block page** served 
 | Problem | Possible cause | Solution |
 |--------|---------------|----------|
 | `PermissionError: [Errno 13]` | Port 80 requires elevated privileges | Run the script with `sudo` (Linux/macOS) or as **Administrator** (Windows) |
-| `OSError: [Errno 98] Address already in use` | Another service is using port 80 (Apache, Nginx, Pi-hole) | Stop the service or change the `PORT` value in `run.py` |
+| `OSError: [Errno 98] Address already in use` | Another service is using port 80 (Apache, Nginx, Pi-hole) | Stop the service cause the `PORT` value in `run.py` cannot be changed |
 | Block page does not load | Firewall or network blocking incoming connections | Allow incoming connections on port 80 on the host firewall |
 | `Internal Server Error (500)` | Target URL is incorrect or unreachable | Verify that `TARGET_URL` is valid and accessible |
 | CSS / JS not loading | HTTP headers not forwarded correctly | Make sure `Content-Type` is forwarded by the proxy |
