@@ -1,2 +1,2 @@
 # unavaible-page-adguard-home
-AdGuard Home Custom Page Blocked
+AdGuard Home Custom Page Blocked Custom
