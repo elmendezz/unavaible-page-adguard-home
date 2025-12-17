@@ -85,5 +85,4 @@ except KeyboardInterrupt:
   ```
 
  Save that file with any name you like, although
- ***run.py***
- is the one you should use.
+ ***run.py*** is the one you should use.
