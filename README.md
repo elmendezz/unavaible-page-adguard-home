@@ -7,7 +7,7 @@ It is ideal for users running AdGuard Home on:
 - Raspberry Pi
 - VPS
 - Local servers
-- Android (via Termux)
+- Windows
 
 Instead of showing a generic connection error, blocked requests are redirected to a clean and user-friendly interface.
 
@@ -48,7 +48,7 @@ import urllib.error
 
 # --- CONFIGURATION ---
 PORT = 80
-# Exact URL of your hosted block page (Vercel, Netlify, etc.)
+# Exact URL of your hosted block page (Vercel, Netlify, etc.), Insert Yours
 TARGET_URL = "https://unavaible-page-adguard-home.vercel.app"
 
 class ReverseProxyHandler(http.server.BaseHTTPRequestHandler):
@@ -316,3 +316,4 @@ From now on, every blocked domain will display the **custom block page** served 
   ~/proxy_log.txt
   ```
 
+# NOTE: If you're using AdGuard Home on one device, keep in mind that you'll need another device since port 80 is used by AdGuard Home WebUI. I recommend using an older mobile device (like a Samsung Galaxy) with root and termux. 
