@@ -287,3 +287,29 @@ Una vez que el servidor Python esté en ejecución, debes vincularlo con AdGuard
 
 A partir de este momento, cualquier dominio bloqueado mostrará la **página de bloqueo personalizada** servida por el proxy.
 
+## ❓ 4. Solución de Problemas
+
+| Problema | Posible causa | Solución |
+|--------|--------------|----------|
+| `PermissionError: [Errno 13]` | El puerto 80 requiere privilegios elevados | Ejecuta el script con `sudo` (Linux/macOS) o como **Administrador** (Windows) |
+| `OSError: [Errno 98] Address already in use` | Otro servicio está usando el puerto 80 (Apache, Nginx, Pi-hole) | Detén el servicio o cambia el valor de `PORT` en `run.py` |
+| La página de bloqueo no carga | Firewall o red bloqueando conexiones entrantes | Permite conexiones entrantes al puerto 80 en el firewall del host |
+| `Internal Server Error (500)` | URL de destino incorrecta o inaccesible | Verifica que `TARGET_URL` sea válida y esté disponible |
+| CSS / JS no cargan | Cabeceras HTTP no reenviadas correctamente | Asegúrate de que `Content-Type` se esté reenviando en el proxy |
+| El proxy no inicia al arrancar | Servicio mal configurado | Revisa el estado con `systemctl status adguard-proxy` o los logs del sistema |
+
+### Depuración
+
+- Ejecuta el script manualmente para ver errores:
+  ```bash
+  sudo python3 run.py
+  ```
+- Revisa los registros del servicio:
+  ```bash
+  sudo journalctl -u adguard-proxy -f
+  ```
+- En Android (Termux), revisa el archivo:
+  ```bash
+  ~/proxy_log.txt
+  ```
+
