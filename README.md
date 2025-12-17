@@ -83,6 +83,13 @@ except PermissionError:
 except KeyboardInterrupt:
     print("\nServidor detenido.") 
   ```
-
+  
  Save that file with any name you like, although
  ***run.py*** is the one you should use.
+ *** REMEMBER TO RUN IT AS SUDO IF U ARE USING TERMUX ***
+  
+ # Autostart - Autorun 
+ 
+ As an example, we will use Termux:Boot:
+ 
+ 
