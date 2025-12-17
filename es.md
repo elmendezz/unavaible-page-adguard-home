@@ -292,7 +292,7 @@ A partir de este momento, cualquier dominio bloqueado mostrará la **página de 
 | Problema | Posible causa | Solución |
 |--------|--------------|----------|
 | `PermissionError: [Errno 13]` | El puerto 80 requiere privilegios elevados | Ejecuta el script con `sudo` (Linux/macOS) o como **Administrador** (Windows) |
-| `OSError: [Errno 98] Address already in use` | Otro servicio está usando el puerto 80 (Apache, Nginx, Pi-hole) | Detén el servicio o cambia el valor de `PORT` en `run.py` |
+| `OSError: [Errno 98] Address already in use` | Otro servicio está usando el puerto 80 (Apache, Nginx, Pi-hole) | Detén el servicio porque el valor de `PORT` en `run.py` no puede ser cambiado |
 | La página de bloqueo no carga | Firewall o red bloqueando conexiones entrantes | Permite conexiones entrantes al puerto 80 en el firewall del host |
 | `Internal Server Error (500)` | URL de destino incorrecta o inaccesible | Verifica que `TARGET_URL` sea válida y esté disponible |
 | CSS / JS no cargan | Cabeceras HTTP no reenviadas correctamente | Asegúrate de que `Content-Type` se esté reenviando en el proxy |
