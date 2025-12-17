@@ -312,4 +312,4 @@ A partir de este momento, cualquier dominio bloqueado mostrará la **página de 
   ```bash
   ~/proxy_log.txt
   ```
-
+NOTA: Si usa AdGuard Home en un dispositivo, tenga en cuenta que necesitará otro, ya que el puerto 80 lo usa la interfaz web de AdGuard Home. Recomiendo usar un dispositivo móvil más antiguo (como un Samsung Galaxy S3) con Termux y Root.
