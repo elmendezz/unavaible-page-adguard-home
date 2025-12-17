@@ -290,3 +290,29 @@ Once the Python server is running, you need to link it with AdGuard Home.
 
 From now on, every blocked domain will display the **custom block page** served by the proxy.
 
+## ❓ 4. Troubleshooting
+
+| Problem | Possible cause | Solution |
+|--------|---------------|----------|
+| `PermissionError: [Errno 13]` | Port 80 requires elevated privileges | Run the script with `sudo` (Linux/macOS) or as **Administrator** (Windows) |
+| `OSError: [Errno 98] Address already in use` | Another service is using port 80 (Apache, Nginx, Pi-hole) | Stop the service or change the `PORT` value in `run.py` |
+| Block page does not load | Firewall or network blocking incoming connections | Allow incoming connections on port 80 on the host firewall |
+| `Internal Server Error (500)` | Target URL is incorrect or unreachable | Verify that `TARGET_URL` is valid and accessible |
+| CSS / JS not loading | HTTP headers not forwarded correctly | Make sure `Content-Type` is forwarded by the proxy |
+| Proxy does not start on boot | Service misconfiguration | Check status using `systemctl status adguard-proxy` or system logs |
+
+### Debugging
+
+- Run the script manually to see errors:
+  ```bash
+  sudo python3 run.py
+  ```
+- Check service logs:
+  ```bash
+  sudo journalctl -u adguard-proxy -f
+  ```
+- On Android (Termux), check the log file:
+  ```bash
+  ~/proxy_log.txt
+  ```
+
