@@ -316,4 +316,4 @@ From now on, every blocked domain will display the **custom block page** served 
   ~/proxy_log.txt
   ```
 
-# NOTE: If you're using AdGuard Home on one device, keep in mind that you'll need another device since port 80 is used by AdGuard Home WebUI. I recommend using an older mobile device (like a Samsung Galaxy) with root and termux. 
+# NOTE: If you're using AdGuard Home on one device, keep in mind that you'll need another device since port 80 is used by AdGuard Home WebUI. I recommend using an older mobile device (like a Samsung Galaxy) with Root and Termux. 
